@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/sistema-cursos.html');
+    return response()->file(public_path('sistema-cursos.html'));
 });
