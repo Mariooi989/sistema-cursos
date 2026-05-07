@@ -521,22 +521,22 @@
     margin: 0;
   }
 
-  /* ── SCROLL INDICATOR ── */
-  .scroll-hint {
-    position: absolute;
-    bottom: 1.0srem;
-    left: 50%;/*/esto hace que se vaya para la derecha/*/
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .5rem;
-    color: var(--muted);
-    font-size: .6rem;
-    letter-spacing: .10em;
-    text-transform: uppercase;
-    animation: bounce 2s infinite;
-  }
+/* ── SCROLL INDICATOR ── */
+.scroll-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%; /* Lo ubica al centro horizontal */
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  color: var(--muted);
+  font-size: .6rem;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
 
   @keyframes bounce { 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(6px); } }
 
