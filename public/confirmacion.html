@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Inscripción confirmada — Cursos Online</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./css/sistema-cursos.css">
+</head>
+
+<body>
+  <div class="grid-bg"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Cursos Online</div>
+
+    <ul class="nav-links">
+      <li><a href="sistema-cursos.html">Inicio</a></li>
+      <li><a href="sistema-cursos.html#nosotros">Qué somos</a></li>
+      <li><a href="sistema-cursos.html#ofrecemos">Qué ofrecemos</a></li>
+      <li><a href="cursos.html">Cursos</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn-login">Iniciar sesión</a>
+      <a href="register.html" class="btn-register">Registrarse</a>
+    </div>
+  </nav>
+
+  <!-- CONFIRMACIÓN -->
+  <main class="confirmation-page">
+    <section class="confirmation-card">
+      <div class="confirmation-icon" id="confirmationIcon">✓</div>
+
+      <div class="hero-badge confirmation-badge" id="confirmationBadge">
+  <span class="dot"></span>
+  <span id="confirmationBadgeText">Pago aprobado</span>
+</div>
+
+      <h1 id="confirmationTitle">Inscripción confirmada</h1>
+
+      <p class="confirmation-subtitle" id="confirmationSubtitle">
+  Tu inscripción fue registrada correctamente. Te enviamos un correo con los datos del curso,
+  la fecha de inicio y la información para conectarte.
+</p>
+
+      <div class="confirmation-summary">
+        <h2>Resumen de inscripción</h2>
+
+        <div class="summary-item">
+          <span>Curso</span>
+          <strong id="confirmCurso">Curso no especificado</strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Alumno</span>
+          <strong id="confirmAlumno">Sin datos</strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Email</span>
+          <strong id="confirmEmail">Sin email</strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Estado</span>
+          <strong class="status-paid" id="confirmEstado">Pagado</strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Fecha de inicio</span>
+          <strong id="confirmInicio">A confirmar</strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Modalidad</span>
+          <strong>Online en vivo</strong>
+        </div>
+      </div>
+
+      <div class="mail-preview">
+        <h3>Correo enviado al alumno</h3>
+
+        <p>
+          Se envió un mensaje de confirmación con la información del curso, fecha de inicio,
+          horario y datos de acceso. En una versión conectada al backend, este correo sería enviado
+          automáticamente desde Laravel.
+        </p>
+      </div>
+
+      <div class="confirmation-actions">
+        <a href="sistema-cursos.html" class="btn-primary">Volver al inicio</a>
+        <a href="cursos.html" class="btn-secondary">Ver más cursos</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-title">Cursos Online</div>
+    Plataforma de venta de cursos digitales — Cardozo Mario — 2026
+  </footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const curso = params.get('curso') || 'Curso no especificado';
+  const nombre = params.get('nombre') || '';
+  const apellido = params.get('apellido') || '';
+  const email = params.get('email') || '';
+  const estado = params.get('estado') || 'aprobado';
+  const fechaInicio = params.get('fecha_inicio') || '';
+
+  const fechasInicio = {
+    'Introducción a Laravel': '10/06/2026',
+    'MySQL desde cero': '12/06/2026',
+    'MongoDB básico': '15/06/2026',
+    'HTML y CSS práctico': '08/06/2026'
+  };
+
+  document.getElementById('confirmCurso').textContent = curso;
+
+  if (nombre || apellido) {
+    document.getElementById('confirmAlumno').textContent = `${nombre} ${apellido}`.trim();
+  }
+
+  if (email) {
+    document.getElementById('confirmEmail').textContent = email;
+  }
+
+  document.getElementById('confirmInicio').textContent =
+    fechaInicio || fechasInicio[curso] || 'A confirmar';
+
+  const icon = document.getElementById('confirmationIcon');
+  const badge = document.getElementById('confirmationBadge');
+  const badgeText = document.getElementById('confirmationBadgeText');
+  const title = document.getElementById('confirmationTitle');
+  const subtitle = document.getElementById('confirmationSubtitle');
+  const estadoTexto = document.getElementById('confirmEstado');
+
+  if (estado === 'aprobado') {
+    icon.textContent = '✓';
+    icon.className = 'confirmation-icon confirmation-approved';
+
+    badge.className = 'hero-badge confirmation-badge confirmation-badge-approved';
+    badgeText.textContent = 'Pago aprobado';
+
+    title.textContent = 'Inscripción confirmada';
+    subtitle.textContent = 'Tu pago fue aprobado y tu inscripción quedó confirmada. Te enviamos un correo con los datos del curso, la fecha de inicio y la información para conectarte.';
+
+    estadoTexto.textContent = 'Pagado';
+    estadoTexto.className = 'status-paid';
+  }
+
+  if (estado === 'pendiente') {
+    icon.textContent = '!';
+    icon.className = 'confirmation-icon confirmation-pending';
+
+    badge.className = 'hero-badge confirmation-badge confirmation-badge-pending';
+    badgeText.textContent = 'Pago pendiente';
+
+    title.textContent = 'Inscripción pendiente';
+    subtitle.textContent = 'Tu inscripción fue registrada, pero todavía falta confirmar el pago. Cuando se acredite la transferencia, recibirás el correo de confirmación del curso.';
+
+    estadoTexto.textContent = 'Pendiente';
+    estadoTexto.className = 'status-pending';
+  }
+
+  if (estado === 'rechazado') {
+    icon.textContent = '×';
+    icon.className = 'confirmation-icon confirmation-rejected';
+
+    badge.className = 'hero-badge confirmation-badge confirmation-badge-rejected';
+    badgeText.textContent = 'Pago rechazado';
+
+    title.textContent = 'No se pudo confirmar la inscripción';
+    subtitle.textContent = 'El pago fue rechazado o no pudo procesarse correctamente. Podés intentar nuevamente con otro método de pago.';
+
+    estadoTexto.textContent = 'Rechazado';
+    estadoTexto.className = 'status-rejected';
+  }
+</script>
+</body>
+</html>
