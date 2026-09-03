@@ -29,6 +29,7 @@ use MongoDB\InsertManyResult;
 
 use function array_is_list;
 use function is_bool;
+use function MongoDB\create_namespace;
 use function MongoDB\is_document;
 use function sprintf;
 
@@ -38,16 +39,14 @@ use function sprintf;
  * @see \MongoDB\Collection::insertMany()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
  */
-class InsertMany implements Executable
+final class InsertMany
 {
-    private string $databaseName;
-
-    private string $collectionName;
-
     /** @var list<object|array> */
     private array $documents;
 
     private array $options;
+
+    private string $namespace;
 
     /**
      * Constructs an insert command.
@@ -81,6 +80,8 @@ class InsertMany implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, array $documents, array $options = [])
     {
+        $this->namespace = create_namespace($databaseName, $collectionName);
+
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
@@ -111,8 +112,6 @@ class InsertMany implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
         $this->documents = $this->validateDocuments($documents, $options['codec'] ?? null);
         $this->options = $options;
     }
@@ -120,12 +119,10 @@ class InsertMany implements Executable
     /**
      * Execute the operation.
      *
-     * @see Executable::execute()
-     * @return InsertManyResult
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): InsertManyResult
     {
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
@@ -139,7 +136,7 @@ class InsertMany implements Executable
             $insertedIds[$i] = $bulk->insert($document);
         }
 
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
+        $writeResult = $server->executeBulkWrite($this->namespace, $bulk, $this->createExecuteOptions());
 
         return new InsertManyResult($writeResult, $insertedIds);
     }
