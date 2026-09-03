@@ -20,7 +20,6 @@ namespace MongoDB\Model;
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
-use Stringable;
 
 use function is_float;
 use function is_int;
@@ -36,10 +35,10 @@ use function sprintf;
  *
  * @internal
  * @see \MongoDB\Collection::createIndexes()
- * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.md
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  */
-final class IndexInput implements Serializable, Stringable
+class IndexInput implements Serializable
 {
     /**
      * @param array $index Index specification

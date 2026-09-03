@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+RUN pecl install mongodb-1.21.0 && docker-php-ext-enable mongodb
 
 RUN docker-php-ext-install pdo pdo_mysql
 

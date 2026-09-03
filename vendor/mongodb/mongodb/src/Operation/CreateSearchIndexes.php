@@ -19,10 +19,8 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
-use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\SearchNotSupportedException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\SearchIndexInput;
 
@@ -38,8 +36,10 @@ use function sprintf;
  * @see \MongoDB\Collection::createSearchIndex()
  * @see \MongoDB\Collection::createSearchIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createSearchIndexes/
+ *
+ * @final extending this class will not be supported in v2.0.0
  */
-final class CreateSearchIndexes
+class CreateSearchIndexes implements Executable
 {
     private array $indexes = [];
 
@@ -70,6 +70,7 @@ final class CreateSearchIndexes
     /**
      * Execute the operation.
      *
+     * @see Executable::execute()
      * @return string[] The names of the created indexes
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -85,15 +86,7 @@ final class CreateSearchIndexes
             $cmd['comment'] = $this->options['comment'];
         }
 
-        try {
-            $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
-        } catch (ServerException $exception) {
-            if (SearchNotSupportedException::isSearchNotSupportedError($exception)) {
-                throw SearchNotSupportedException::create($exception);
-            }
-
-            throw $exception;
-        }
+        $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
 
         /** @var object{indexesCreated: list<object{name: string}>} $result */
         $result = current($cursor->toArray());
