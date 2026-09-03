@@ -21,8 +21,9 @@ RUN composer install --no-dev --optimize-autoloader
 
 RUN chown -R www-data:www-data /var/www/html
 
-RUN sed -i 's/80/${PORT:-10000}/g' /etc/apache2/ports.conf /etc/apache2/sites-enabled/000-default.conf
-ENV PORT=10000
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 EXPOSE 10000
 
-CMD ["apache2-foreground"]
+CMD ["/start.sh"]
